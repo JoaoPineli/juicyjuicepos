@@ -1,93 +1,101 @@
-from PIL import Image
-from PIL import ImageFont
-from PIL import Image
-from PIL import ImageDraw
-from escpos import printer
-from pathlib import Path
-import pandas as pd 
+import io 
+import dicts
+import base64
 import qrcode
 import arabic_reshaper 
-from bidi.algorithm import get_display
+from uttlv import TLV
+from pathlib import Path 
 from datetime import datetime
-import numpy as np 
-import io 
-from fatoora import Fatoora
+from bidi.algorithm import get_display
+from PIL import Image, ImageFont, ImageDraw
 
 def get_qr_img(total_amount,tax_amount) : 
     dt = datetime.now()
-    ts = datetime.timestamp(dt)
-    fatoora_obj = Fatoora(
-    seller_name="Juicy Juice",
-    tax_number="310590919100003",
-    invoice_date = ts, 
-    total_amount=total_amount, 
-    tax_amount=tax_amount, 
-    )
-    qr_image = qrcode.make(fatoora_obj.base64)
+    iso_zulu = dt.isoformat(timespec='seconds') + 'Z'
+    t = TLV()
+    seller_name="Juicy Juice"
+    tax_number="310590919100003"
+    invoice_date = iso_zulu
+    total_amount=total_amount
+    total_amount_w_tax=total_amount+tax_amount
+    tax_amount=tax_amount
+
+    t[0x01] = seller_name
+    t[0x02] = tax_number
+    t[0x03] = invoice_date
+    t[0x04] = total_amount_w_tax.__str__()
+    t[0x05] = tax_amount.__str__()
+
+    b64 = base64.b64encode(t.to_byte_array()).decode()
+    qr_image = qrcode.make(b64)
     buf = io.BytesIO()
     qr_image.save(buf)
     img = Image.open(buf)
     img = img.resize((200,200))
     return img
+    
 path = Path(__file__).with_name('x-2.jpg')
 IMG = Image.open(path)
 TAX = 15
 
-items_db = {
-    "english":"arabic",
-    "Apple":"تفاح",
-    "apple":"تفاح",
-    "Avocado":"افوكادو",
-    "avocado":"افوكادو",
-    "Banana":"موز",
-    "banana":"موز",
-    "Beet":"شمندر",
-    "beet":"شمندر",
-    "Blueberry":"توت",
-    "blueberry":"توت",
-    "Carrot":"جزر",
-    "carrot":"جزر",
-    "Ginger":"زنجبيل",
-    "ginger":"زنجبيل",
-    "Guava":"جوافة",
-    "guava":"جوافة",
-    "Kiwi":"كيوي",
-    "kiwi":"كيوي",
-    "Lemon":"ليمون",
-    "lemon":"ليمون",
-    "Mango":"مانجو",
-    "mango":"مانجو",
-    "Melon":"شمام",
-    "melon":"شمام",
-    "Orange":"برتقال - خلاط",
-    "orange":"برتقال - خلاط",
-    "Orange mix":"برتقال - كبس",
-    "Pineapple":"اناناس",
-    "pineapple":"اناناس",
-    "Pomegranate":"رمان",
-    "pomegranate":"رمان",
-    "Strawberry":"فراولة",
-    "strawberry":"فراولة",
-    "Watermelon":"بطيخ",
-    "watermelon":"بطيخ",
-    "Grape":"عنب",
-    "grape":"عنب",
-    "Mint":"نعناع",
-    "mint":"نعناع",
-    "Aoar qalb":"عوار القلب",
-    "Asfahani":"اصفهاني",
-    "Askindarani":"اسكندراني",
-    "French juice":"فرنسي",
-    "Lolly cocktail":"كوكتيل لولي",
-    "Refreshing juice":"منعش",
-    "Romanbo":"رمانبو",
-    "Sultan":"السلطان",
-    "Vitamins":"فيتامنيات",
-    "Fruit salad":"سلطة فواكه",
-    "Ice cream":"ايس كريم",
-    "Cash":"نقدي",
-    "Card":"بطاقة",
-}
+items_db = dicts.all_items_dict
+items_db.update({"cash":"نقدي", "card":"بطاقة"})
+print(items_db)
+# {
+    # "english":"arabic",
+    # "Apple":"تفاح",
+    # "apple":"تفاح",
+    # "Avocado":"افوكادو",
+    # "avocado":"افوكادو",
+    # "Banana":"موز",
+    # "banana":"موز",
+    # "Beet":"شمندر",
+    # "beet":"شمندر",
+    # "Blueberry":"توت",
+    # "blueberry":"توت",
+    # "Carrot":"جزر",
+    # "carrot":"جزر",
+    # "Ginger":"زنجبيل",
+    # "ginger":"زنجبيل",
+    # "Guava":"جوافة",
+    # "guava":"جوافة",
+    # "Kiwi":"كيوي",
+    # "kiwi":"كيوي",
+    # "Lemon":"ليمون",
+    # "lemon":"ليمون",
+    # "Mango":"مانجو",
+    # "mango":"مانجو",
+    # "Melon":"شمام",
+    # "melon":"شمام",
+    # "Orange":"برتقال - خلاط",
+    # "orange":"برتقال - خلاط",
+    # "Orange mix":"برتقال - كبس",
+    # "Pineapple":"اناناس",
+    # "pineapple":"اناناس",
+    # "Pomegranate":"رمان",
+    # "pomegranate":"رمان",
+    # "Strawberry":"فراولة",
+    # "strawberry":"فراولة",
+    # "Watermelon":"بطيخ",
+    # "watermelon":"بطيخ",
+    # "Grape":"عنب",
+    # "grape":"عنب",
+    # "Mint":"نعناع",
+    # "mint":"نعناع",
+    # "Aoar qalb":"عوار القلب",
+    # "Asfahani":"اصفهاني",
+    # "Askindarani":"اسكندراني",
+    # "French juice":"فرنسي",
+    # "Lolly cocktail":"كوكتيل لولي",
+    # "Refreshing juice":"منعش",
+    # "Romanbo":"رمانبو",
+    # "Sultan":"السلطان",
+    # "Vitamins":"فيتامنيات",
+    # "Fruit salad":"سلطة فواكه",
+    # "Ice cream":"ايس كريم",
+    # "Cash":"نقدي",
+    # "Card":"بطاقة",
+# }
 
 
 
@@ -124,8 +132,8 @@ def extract_meta_img_1 (img,w,h,x,y) :
 def generate_arabic_string(eng_item,adict) :
     a = ""
     for index,t in enumerate(eng_item.split(' + ')) : 
-        text=adict[t]
-        reshaped_p = arabic_reshaper.reshape(adict[t])
+        text=adict[t.lower()]
+        reshaped_p = arabic_reshaper.reshape(adict[t.lower()])
         text = get_display(reshaped_p)
         #text += "-"+t
         if (index != 0 ):
@@ -231,7 +239,7 @@ def calculate_and_convert_items(items):
     total_after  = "{:.2f}".format(round(total_after, 2))
     tax_amount   = "{:.2f}".format(round(tax_amount, 2))
     return total_before,tax_amount,total_after,conv_items
-def intro_image(w,h,adate,atime,font) : 
+def intro_image(w,h,font) : 
     text = get_display(arabic_reshaper.reshape("مبيعات جوسي جوس"))
     item_image = Image.new('RGB', (w,h), (255,255,255))
     d = ImageDraw.Draw(item_image)
@@ -247,12 +255,6 @@ def intro_image(w,h,adate,atime,font) :
     now_date,now_time  = get_date_time()
     d.text((600-shift-220,65),now_date,font=font,fill='black')
     d.text((600-shift-200,120),now_time,font=font,fill='black')
-    
-    text = get_display(arabic_reshaper.reshape("مبيعات يوم    :"))
-    shift = font.getsize(text)[0]
-    d.text((600-shift,180),text,font=font,fill='black')
-    
-    d.text((600-shift-220,180),adate,font=font,fill='black')
     return item_image
 def create_entry_row(items,font) : 
     items_count = len(items)+2
@@ -298,7 +300,7 @@ def create_entry_row(items,font) :
         d.line([(col_shift,(index)*item_height),(col_shift,(index+1)*item_height-a)],"#000000",width=3)
         col_shift = 440
         d.line([(col_shift,(index)*item_height),(col_shift,(index+1)*item_height-a)],"#000000",width=3)
-        d.text((450,30+index*item_height),"20/22/1990",font=font,fill='black')
+        d.text((450,30+index*item_height),i['date'],font=font,fill='black')
         d.text((310,30+index*item_height),str(total_before),font=font,fill='black')
         d.text((170,30+index*item_height),str(tax_amount),font=font,fill='black')
         d.text((20,30+index*item_height),str(total_after),font=font,fill='black')    
@@ -311,12 +313,12 @@ def create_entry_row(items,font) :
     d.text((100,(items_count-2)*item_height+20),aggregate,font=font,fill='black')
     
     return item_image
-def generate_total_receipt(items_list,adate):
+def generate_total_receipt(items_list):
+    path = str(Path(__file__).with_name('arabic.ttf'))
     items_list.insert(0, {'total':None})
-    path = str(Path(__file__).with_name("arabic.ttf"))
     font        = ImageFont.truetype(path, 26)
     space       = item_image = Image.new('RGB', (600,100), (255,255,255))
-    img         = intro_image(600,300,adate,"time",font)
+    img         = intro_image(600,180,font)
     current     = get_concat_v(space,img)
     font        = ImageFont.truetype(path, 30)
     table = create_entry_row(items_list,font)

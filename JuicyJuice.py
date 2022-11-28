@@ -20,10 +20,10 @@ def get_prices(tuple): # Gets the prices of the items in the table
     p = os.path.expanduser(f"~\\Documents\\JuicyJuice\\items.csv")
     f = open(p, 'r', encoding="utf-8-sig")
     item_dict = csv.DictReader(f, delimiter=';')
+    item = tuple[0].capitalize()
 
     for dict in item_dict:
-        item = tuple[0].capitalize()
-        if dict["Type"] == item:
+        if dict["Type"].strip() == item:
             f.close()
             return float(dict[tuple[1]].strip())
 
@@ -89,14 +89,17 @@ def mixtures_layout(): # Arranges the mixture frames on the right side
 def cocktails_layout(): # Arranges the secondary column on the right side
     cocktails, l = [], []
     for drink in cocktails_list:
-        l.append(cr_drink_btn(drink, 22, 'cocktail'))
+        l.append(cr_drink_btn(drink, 23, 'cocktail'))
         if (len(l) == 3):
             cocktails.append(l)
             l = []
+    if len(l) != 0:
+        cocktails.append(l)
+    i = 23
+    food_layout =   [[cr_drink_btn("Fruit salad", i, 'food'), cr_drink_btn("Ice cream", i, 'food'), cr_drink_btn("Waffle", i, 'food')],
+                     [cr_drink_btn("Crepe", i, 'food'), cr_drink_btn("Scrambled eggs", i, 'food'), cr_drink_btn("Pancake", i, 'food')]]
 
-    food_layout = [cr_drink_btn("Fruit salad", 35, 'food'), cr_drink_btn("Ice cream", 35, 'food')]
-
-    return [[sg.Fr("", cocktails,)], food_layout, [sg.B(button_text = reverse_str("عصائر أخرى") if LANGUAGE == 'Arabic' else "Other Products", expand_x=True, k='SW2')]]
+    return [[sg.Fr("", cocktails,)], [sg.Fr("", food_layout)], [sg.B(button_text = reverse_str("عصائر أخرى") if LANGUAGE == 'Arabic' else "Other Products", expand_x=True, k='SW2')]]
 
 def size_selector_layout(): # Creates the layout of the size selector window
     layout = []
@@ -206,16 +209,6 @@ def change_table(current_items): # Changes the table according to the current it
     table_items.append((tax_txt,"", "", f"{total_price*0.15:.2f}"))
     table_items.append((after_tax_txt, "", "" , f"{total_price*1.15:.2f}"))
     return table_items   
-
-def create_invoice(current_items, current_salesman): # Prints the receipt of the current order
-    items = change_table(current_items)
-    total = 0
-    for item in items:
-        total += float(item[3])
-    print(f"{current_salesman}'s receipt:")
-    for item in items:
-        print(f"{item[0]} {item[1]} {item[2]} {item[3]}")
-    print(f"Total: {total:.2f}")
 
 def check_report_file(path): # Checks if the report file exists, if not, creates it
     paths = os.path.split(path)
@@ -652,13 +645,21 @@ def Main():
         elif event == "__TIMEOUT__": # If the window timesout, the loop continues
             continue
 
+        elif event in ('waffle', 'pancake', 'crepe', 'scrambled eggs'):
+            current_items.append((event, 'Medium'))
+            try :
+                window["T"].update(values=change_table(current_items))
+            except:
+                break
+            window.refresh()
+
         else: # Deals with all buttons
             window["CRLS"].update(rmv_last_txt)
             item_to_remove = ''
             selection, _ = make_selector_win().read(close=True)
             if selection in (sg.WIN_CLOSED, "__TIMEOUT__"):
                 continue
-            if (event, selection) == ("fruit salad", "Small"):
+            if get_prices((event, selection)) == 0.00:
                 continue 
             current_items.append((event, selection))
             try :

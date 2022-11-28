@@ -4,7 +4,9 @@ def dict_to_list(dict):
         list.append(item)
     list.sort()
     return list
-
+    
+def reverse_str(string): # Reverses a string
+    return " ".join(string.split()[::-1]) 
 black = b'iVBORw0KGgoAAAANSUhEUgAAADIAAAAyAQMAAAAk8RryAAAACXBIWXMAAA7zAAAO8wEcU5k6AAAAEXRFWHRUaXRsZQBQREYgQ3JlYXRvckFevCgAAAATdEVYdEF1dGhvcgBQREYgVG9vbHMgQUcbz3cwAAAALXpUWHREZXNjcmlwdGlvbgAACJnLKCkpsNLXLy8v1ytISdMtyc/PKdZLzs8FAG6fCPGXryy4AAAAA1BMVEUBAQHIpFY6AAAADUlEQVQYGWMYBYMKAAABkAABwfaqPgAAAABJRU5ErkJggg=='
 
 ico = b'iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAcNJREFUOE9jZKAyYKSyeQwDb+D+9f0CK+b2PU71V/uRPvFmi5LmkymrVzP8hfmUZBe+2p14m//TKRVGXhWGb1Kh/009M2fdfvw5g5CB4gwMDGZYwtdwXbNVI8OfLwwmoRMYeK4UM3wSsr6n4DZFmZCBPnO3n9ssJAoyFxO8efmMgf1wGoOr6nuGV6w6H/TjtggSMtB3/Zmnm0TEpbAa+OD2dYZ/66wZNGxi/mW07nA/f/n2HoIGztt+bpOihg7Dh7evGfgEhMDqP314xyAoIs5w4cSB/+Wxbrd//v6njm4jrkhxWNSbtevty3ssCn9PMt77r8fAzsLIIP33IsMDFuv/rK8O/8iZ/9GGgYHhHLEGin/9+OIa6xZDiNPQwJN3f18p5b5SYmBg+EqsgYwPH9x7InnUGmsgrjv142nExPcy2CzDmQ79vD3urIm6CE8OMM3//jEwGFS8fnbj6R9pkgxkYGB48mupJIam77/+M/AnvnjGwMBAsoFPfy2VkGJAy+5ffvxnEEomz8DHv1apyTD8/oziM6iBdxgYGFRJ9bLO0gqdo15qr1mRNa4+/oMzbfZHkHdB3sYAJBcOWLMOkuDgNxAAV8emFQvM+9gAAAAASUVORK5CYII='
@@ -51,24 +53,25 @@ image_dict['strawberry + mango'] = b'iVBORw0KGgoAAAANSUhEUgAAAH0AAAAyCAMAAABGUCS
 image_dict['Fruit Salad'] = b'iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAJcEhZcwAANdQAADXUAV5l5QgAAABgUExURUdwTAAAAAsNBgZBDx0kKQoKCAAAAAAAAAYGCAAAAFxJFyWX9ve6AZvK8vwhGRx+zQQkQlFrgEIeBfnXFBpsrw6lNqR5A68TDcWWAw10JWZmWA1Mf8SwVpcPDYGmyNZOSWL1BtoAAAALdFJOUwCU/P7+xRUz62b9qZ1EZQAAAchJREFUSMftluuSoyAQhQMIdLNEDUQUNcn7v+W2mvE2m5Bs1dRUTc35q5+nj43dHg6/+h5pRPUmgkLINxmMlWDvulSR41uIkhXZ6BSktF7SSxEjQCKPkgDTHYplMQouuNSJ98rdVL1ioiJFziWbGIWfWYVMaWgCDJfuhHBNY0YfhZwqVIiol0KRc6Zlb81wSUaSIMJaGyTFksZxxqRpYybnDqOjB0LvG0fNQCa5McGOMmBut1vtXFaNEuzOaOmt4b33zRiHtfZDjbvleU6ImJDIP2LJnpjWex8AqbR+Rqyr81EXJwSVu6rMeBsMIZYYbP2CmEt+V32hwGrVlCFIPzGwMpldRqfNsRtszGDjqfxgV1lWSC03rWHt3WaocEGCyx+5HBBMcNS9pgmBh1nO1Yvc5gQxyF4RLGdbw/X4gq4nWE57dnxJ17mT9JLb0yvKVl+Qljwrk9p+Qaw9/nmuoihKdvhipPhPl83IwSztct6ONmpmGgG9nUmndF1yN1OzawI570duwmY02Q9PDaenSAefByDC+YlH969NoPCRD+XoHuwOhHJvVIxt70p4tDg0g7Lrzlt1BDD9bLHS0thJok7vpo3UT/73+AspeDt4N6TE7wAAAABJRU5ErkJggg=='
 image_dict['Ice Cream'] = b'iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAJcEhZcwAANdQAADXUAV5l5QgAAABIUExURUdwTPxgqPvALd5TkwAAAAAAAAAAAAAAAAMCAwAAAB8PEnhCVkspM/FcoJ54GJJ8d/bKYtaiJMJIgdqOsXBVFfyAuaY9bcSteMyMoSQAAAAKdFJOUwD///9Xg6go8dKypO9OAAABO0lEQVRIx9WVSZKDMAxFoT3JQgwxhNz/pg14wOmuiuRl/v6VpIcsuu6r4rSx1mgnBywgESF4I4Q00Lw++34MA3otIQxcwBGlAoGW1JgjcCJKEbC9OT9koh8vxrJt4drfOZCdba0qkhiujIM5NVV6G7xjhq/7upCdEaCrUcbItCDCKu5/Y9wszs/Pd4L/MIbWMSU6Dqi5JcacPRUB8xmxOOSEiOyEpmGUazEV+c/7QqpOOMPMrz3+DTCSz1cP21SygeQCHJv5k/PYvOj122EpCP/A0iu7EdSymwSvTEwgvEp+XsoowtNnKCNohIjG1NkEWnpgfdIsVFxpfqAV3/GkWaq40ixWfGsWKy6a5YrjBXy1KC6aGxRnzWRbiGMBlhbFSXOT4vif2dr6OhegSXHU3NrXodl3rTGm+7b8ArVlEEVKHw21AAAAAElFTkSuQmCC'
 
-juice_translation_dict = {"orange mix": "برتقال - كبس", "orange": "برتقال - خلاط", "pomegranate": "رمان", "apple": "تفاح", "pineapple": "أناناس ", "strawberry": "فراولة", "guava": "جوافة ", "mango": "ما نجو", "banana": "موز", "kiwi": "كيوي", "melon": "شمام", "watermelon": "بطيخ", "beet": "شمندر", "lemon": "ليمون", "avocado": "أفوكادو", "blueberry": "توت", "carrot": "جزر", "ginger": "زنجيل"}
-juice_translation_dict.update({"avocado + mango": "أفواكادو- فا نجو", "avocado + orange": "أفواكادو- برتقال", "avocado + pineapple": "أفواكادو- اننا س", "avocado + strawberry": "أفواكادو- فرا ولة", "strawberry + banana": "فراولة - موز", "beet + apple": "شمندر- تفاح", "beet + pomegranate": "شمندر- رمان", "kiwi + pineapple": " ليمون-كيوي", "lemon + grape": "كيوي- اننا س", "lemon + kiwi": "ليمون- عنب", "lemon + mint": "ليمون- نعناع", "lemon + pomegranate": "ليمون- رمان", "mango + guava": "ما نجو- جوا فة", "strawberry + mango": "فراولة - مانجو", "orange + apple": "برتقال- تفاح", "orange + banana": "برتقال- موز", "orange + beet": " برتقال-شمندر", "orange + kiwi": "برتقال-كيوي ", "orange + lemon": "برتقال- ليمون", "orange mix + lemon": "برتقال-ليمون خلاط", "orange + pomegranate": "برتقال- رمان"})
+juice_translation_dict = {"orange mix": "برتقال-كبس", "orange": "برتقال-خلاط", "pomegranate": "رمان", "apple": "تفاح", "pineapple": "أناناس", "strawberry": "فراولة", "guava": "جوافة ", "mango": "مانجو", "banana": "موز", "kiwi": "كيوي", "melon": "شمام", "watermelon": "بطيخ", "beet": "شمندر", "lemon": "ليمون", "avocado": "أفوكادو", "blueberry": "توت", "carrot": "جزر", "ginger": "زنجيل"}
+juice_translation_dict.update({"avocado + mango": "أفواكادو-مانجو", "avocado + orange": "أفواكادو-برتقال", "avocado + pineapple": "أفواكادو-أناناس", "avocado + strawberry": "أفواكادو-فراولة", "strawberry + banana": "فراولة-موز", "beet + apple": "شمندر-تفاح", "beet + pomegranate": "شمندر-رمان", "kiwi + pineapple": "أناناس-كيوي", "lemon + grape": "ليمون-عنب", "lemon + kiwi": "ليمون-كيوي", "lemon + mint": "ليمون-نعناع", "lemon + pomegranate": "ليمون-رمان", "mango + guava": "مانجو-جوافة", "strawberry + mango": "فراولة-مانجو", "orange + apple": "برتقال-تفاح", "orange + banana": "برتقال-موز", "orange + beet": "برتقال-شمندر", "orange + kiwi": "برتقال-كيوي ", "orange + lemon": "برتقال-ليمون", "orange mix + lemon": "برتقال-ليمون خلاط", "orange + pomegranate": "برتقال-رمان"})
 
 fruit_list = dict_to_list(juice_translation_dict)
 
-cocktails_dict = {"lolly cocktail": "كوكتيل لولي", "aoar qalb": "عـوار قـلـب", "askindarani": "اسكندراني", "asfahani": "اصفهـانـي", "vitamins": "فيتـامينـات", "sultan": "السلطان", "french juice": "فرنسي", "refreshing juice": "منعش", "romanbo": "رومـانبـو"}
+cocktails_dict = {"lolly cocktail": "كوكتيل لولي", "aoar qalb": "عـوار قـلـب", "askindarani": "اسكندراني", "asfahani": "اصفهـانـي", "vitamins": "فيتـامينـات", "sultan": "السلطان", "french juice": "فرنسي", "refreshing juice": "منعش", "romanbo": "رومـانبـو","7up mixture": "مخلوط سفن أب", "code red mixture": "مخلوط كود رد", "pomegranate mixture": "مخلوط رمان", "blueberry mixture": "مخلوط توت أزرق", "blackberry mixture": "مخلوط توت أسود", "watermelon mixture": "مخلوط بطيخ", "kitkat mocha": "موكا كتكات", "galaxy mocha": "موكا  جالكسي", "oreo mocha": "موكا أوريو", "lotus mocha": "موكا لوتس", "melano ice": "أيس ميلانو"}
 cocktails_list = dict_to_list(cocktails_dict)
+print(cocktails_list)
 
-foods_dict = {"fruit salad": "سلطة الفواكة", "ice cream": "أيسكريم"}
+foods_dict = {"fruit salad": "سلطة الفواكة", "ice cream": "أيسكريم", "pancake": "بان كيك", "waffle": "وافل", "crepe": "كريب ", "scrambled eggs": "بيض مخفوق"}
 foods_list = dict_to_list(foods_dict)
 
-translaction_dict = {"juice type": "نوع العصير ", "qty": "الكمية ", "size": "الحجم ", "price": "السعر ", "sc": "كأس صغير ", "mc": "كأس وسط ", "lc": "كأس كبير  ", "mg": "جالون وسط", "lg": "جالون كبير ", "correct last": "تعديل الطلب ", "finish order": "انهاء الطلب ", "other products": "عصائر أخرى ", "enter salesman name": "ادخل اسم البائع ", "arabic": "عربي", "the seller name must be entered": "يجب ادخال اسم البائع ", "no items to correct": "لايوجد عناصر للتعديل ", "no items ordered": "لايوجد عناصر مطلوبة ", "ok": "موافق ", "complete order": "إكمال الطلب"}
+translaction_dict = {"juice type": "نوع العصير ", "qty": "الكمية ", "size": "الحجم ", "price": "السعر ", "sc": "كأس صغير ", "mc": "كأس وسط ", "lc": "كأس كبير  ", "mg": "جالون وسط", "lg": "جالون كبير ", "correct last": "الطلب تعديل", "finish order": "انهاء الطلب ", "other products": "عصائر أخرى ", "enter salesman name": "ادخل اسم البائع ", "arabic": "عربي", "the seller name must be entered": "يجب ادخال اسم البائع ", "no items to correct": "لايوجد عناصر للتعديل ", "no items ordered": "لايوجد عناصر مطلوبة ", "ok": "موافق ", "complete order": "إكمال الطلب", "Cash":"نقدي", "Card":"بطاقة"}
 
 all_items_dict = juice_translation_dict
 all_items_dict.update(cocktails_dict)
 all_items_dict.update(foods_dict)
 all_items_dict.update(translaction_dict)
-
+all_items_dict.update({v: k for k, v in all_items_dict.items()})
 dicts_dict = {"juice": juice_translation_dict, "cocktail": cocktails_dict, "food": foods_dict}
 
 size_translaction_dict = {'Small': 'صغیر ', 'Medium': 'وسط', 'Large': 'كبير', 'Medium gallon': 'جالون وسط', 'Large gallon': 'جالون كبير'}
